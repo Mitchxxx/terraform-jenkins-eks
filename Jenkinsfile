@@ -13,7 +13,7 @@ pipeline {
                 }
             }
         }
-        stage ('Initializing Teerraform'){
+        stage ('Initializing Terraform'){
             steps{
                 script {
                     dir('Eks-server'){
@@ -22,11 +22,39 @@ pipeline {
                 }
             }
         }
-        stage ('Terraform validate'){
+        stage ('Formatting terraform code'){
+            steps{
+                script {
+                    dir('Eks-server'){
+                        sh 'terraform fmt'
+                    }
+                }
+            }
+        }
+        stage ('Validating terraform'){
             steps{
                 script {
                     dir('Eks-server'){
                         sh 'terraform validate'
+                    }
+                }
+            }
+        }
+        stage ('Previewing the Infra using Terraform'){
+            steps{
+                script {
+                    dir('Eks-server'){
+                        sh 'terraform plan'
+                    }
+                    input(message: "Are you sue to proceed?", ok: "Proceed")
+                }
+            }
+        }
+        stage ('Creating/Destroying an EKS Cluster'){
+            steps{
+                script {
+                    dir('Eks-server'){
+                        sh 'terraform $action --auto-approve'
                     }
                 }
             }
