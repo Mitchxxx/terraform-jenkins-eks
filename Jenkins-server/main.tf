@@ -72,6 +72,16 @@ module "ec2_instance" {
   vpc_security_group_ids      = [module.sg.security_group_id]
   subnet_id                   = module.vpc.public_subnets[0]
   associate_public_ip_address = true
+  root_block_device = [
+    {
+  
+      volume_type = "gp3"
+      volume_size = 15
+      tags = {
+        Name = "jenkins-block"
+      }
+    },
+  ]
   user_data                   = file("jenkins-install.sh")
   availability_zone           = data.aws_availability_zones.azs.names[0]
 
