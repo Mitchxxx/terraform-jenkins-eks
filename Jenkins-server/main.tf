@@ -77,10 +77,7 @@ module "ec2_instance" {
   
       volume_type = "gp3"
       volume_size = 15
-      tags = {
-        Name = "jenkins-block"
-      }
-    },
+    }
   ]
   user_data                   = file("jenkins-install.sh")
   availability_zone           = data.aws_availability_zones.azs.names[0]
